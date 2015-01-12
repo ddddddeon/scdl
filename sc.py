@@ -1,4 +1,5 @@
 import soundcloud
+import re
 import sys
 import requests
 from unidecode import unidecode
@@ -13,7 +14,8 @@ uid = user[0].obj['id']
 tracks = client.get('/users/' + str(uid) + '/tracks')
 for t in tracks:
     filename = unidecode(t.obj['title']) + '.mp3'
-    filename = filename.strip("/*~\\$")
+    filename = filename.strip("\/*~\\$")
+    filename = re.sub("[/\*\~\\$]", "", filename)
     f = open(filename, 'wb');
     print "[SAVING] %s -> %s" % (t.obj['title'], filename)
     stream_url = t.obj['stream_url']
