@@ -16,7 +16,7 @@ for username in usernames:
         tracks = client.get('/users/' + str(uid) + '/tracks')
     except:
         print 'username not found :('
-        exit(1)
+        continue
 
     def bail_out(_file, filename):
         _file.close()
