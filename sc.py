@@ -79,8 +79,9 @@ def save_trax(client, username, trax_or_favs):
         print u'  \u2713' # great job!
 
 for username in usernames:
-    
-    save_trax(client, username, 'tracks')
-    if args.favs:
-        save_trax(client, username, 'favorites')
-
+    try:
+        save_trax(client, username, 'tracks')
+        if args.favs:
+            save_trax(client, username, 'favorites')
+    except:
+        continue
