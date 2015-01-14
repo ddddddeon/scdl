@@ -13,7 +13,7 @@ client = soundcloud.Client(client_id=CLIENT_ID)
 
 parser = argparse.ArgumentParser(description='scdl')
 parser.add_argument('-f', '--favs', action='store_true')
-parser.add_argument('-u', '--user', nargs='+', type=str, required=True)
+parser.add_argument('user', nargs='+', type=str)
 args = parser.parse_args()
 
 usernames = args.user
