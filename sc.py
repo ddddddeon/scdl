@@ -9,14 +9,7 @@ import argparse
 # you will need to set an environment variable with
 # your soundcloud client_id from https://developers.soundcloud.com
 CLIENT_ID = os.getenv('SOUNDCLOUD_CLIENT_ID')
-
-#usernames = sys.argv[1::]
 client = soundcloud.Client(client_id=CLIENT_ID)
-
-def bail_out(_file, filename):
-    _file.close()
-    os.remove(filename)
-    print '  :('
 
 parser = argparse.ArgumentParser(description='scdl')
 parser.add_argument('-f', '--favs', action='store_true')
@@ -24,7 +17,11 @@ parser.add_argument('-u', '--user', nargs='+', type=str, required=True)
 args = parser.parse_args()
 
 usernames = args.user
-favs = args.favs
+
+def bail_out(_file, filename):
+    _file.close()
+    os.remove(filename)
+    print u'  \u2718'
 
 # call soundcloud api to get user ids, 
 # make directories for usernames,
@@ -84,6 +81,6 @@ def save_trax(client, username, trax_or_favs):
 for username in usernames:
     
     save_trax(client, username, 'tracks')
-    if favs:
+    if args.favs:
         save_trax(client, username, 'favorites')
 
