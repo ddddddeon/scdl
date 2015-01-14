@@ -38,7 +38,7 @@ def save_trax(client, username, trax_or_favs):
             print "must be either favorites or tracks"
             exit(1)
     except:
-        raise Exception("user not found :(")
+        raise
         
     if trax_or_favs == 'favorites':
         username += '/favs'
@@ -84,4 +84,5 @@ for username in usernames:
         if args.favs:
             save_trax(client, username, 'favorites')
     except:
+        print "user not found :("
         continue
