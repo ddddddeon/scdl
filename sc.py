@@ -50,8 +50,7 @@ def save_trax(client, username, trax_or_favs):
         # remove any characters that might fuck up a unix box
         filename = unidecode(t.obj['title']) + '.mp3'
         filename = re.sub("[/\*\~\\$]", "", filename)
-        
-        filename = username + '/' + unidecode(t.obj['user']['username']) + ' - ' + filename
+        filename = username + '/' + t.obj['user']['permalink'] + ' - ' + filename
 
         # make the file <username>/<trak>.mp3 
         f = open(filename, 'wb');
