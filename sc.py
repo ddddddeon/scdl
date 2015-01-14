@@ -4,12 +4,13 @@ import os
 import sys
 import requests
 from unidecode import unidecode
+import argparse
 
 # you will need to set an environment variable with
 # your soundcloud client_id from https://developers.soundcloud.com
 CLIENT_ID = os.getenv('SOUNDCLOUD_CLIENT_ID')
 
-usernames = sys.argv[1::]
+#usernames = sys.argv[1::]
 client = soundcloud.Client(client_id=CLIENT_ID)
 
 def bail_out(_file, filename):
@@ -17,19 +18,34 @@ def bail_out(_file, filename):
     os.remove(filename)
     print '  :('
 
+parser = argparse.ArgumentParser(description='scdl')
+parser.add_argument('-f', '--favs', action='store_true')
+parser.add_argument('-u', '--user', nargs='+', type=str, required=True)
+args = parser.parse_args()
+
+usernames = args.user
+favs = args.favs
+
 # call soundcloud api to get user ids, 
 # make directories for usernames,
 # call api again to get list of trax,
 # then GET all the trax & write blobs to disk
-for username in usernames:
+def save_trax(client, username, trax_or_favs):
     user = client.get('/users', q=username)
+
     try:
         uid = user[0].obj['id']
-        tracks = client.get('/users/' + str(uid) + '/tracks')
+        if trax_or_favs in ['favorites', 'tracks']:
+            tracks = client.get('/users/' + str(uid) + '/' + trax_or_favs)
+        else:
+            print "must be either favorites or tracks"
+            exit(1)
     except:
-        print 'username not found :('
-        continue
-    
+        raise Exception("user not found :(")
+        
+    if trax_or_favs == 'favorites':
+        username += '/favs'
+
     if not os.path.exists(username):
         os.makedirs(username)
     
@@ -37,8 +53,8 @@ for username in usernames:
         # remove any characters that might fuck up a unix box
         filename = unidecode(t.obj['title']) + '.mp3'
         filename = re.sub("[/\*\~\\$]", "", filename)
-        filename = username + '/' + filename
-
+        filename = username + '/' + t.obj['user']['permalink'] + ' - ' + filename
+        
         # make the file <username>/<trak>.mp3 
         f = open(filename, 'wb');
         sys.stdout.write("[SAVING] %s -> %s" % (t.obj['title'], filename))
@@ -47,7 +63,7 @@ for username in usernames:
         try:
             stream_url = t.obj['stream_url']
         except KeyError:
-            bail_out()
+            bail_out(f, filename)
             continue
         
         # getting shady now...
@@ -55,7 +71,7 @@ for username in usernames:
         try:
             stuff = requests.get(stream_url + '?client_id=' + CLIENT_ID, allow_redirects=True)
         except:
-            bail_out()
+            bail_out(f, filename)
             continue
 
         # ...and write it to a file XD XD 
@@ -64,3 +80,10 @@ for username in usernames:
                 f.write(chunk)
         f.close()
         print u'  \u2713' # great job!
+
+for username in usernames:
+    
+    save_trax(client, username, 'tracks')
+    if favs:
+        save_trax(client, username, 'favorites')
+
