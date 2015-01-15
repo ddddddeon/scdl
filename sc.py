@@ -13,10 +13,13 @@ client = soundcloud.Client(client_id=CLIENT_ID)
 
 parser = argparse.ArgumentParser(description='scdl')
 parser.add_argument('-f', '--favs', action='store_true')
+parser.add_argument('-j', '--just-favs', action='store_true')
 parser.add_argument('user', nargs='+', type=str)
 args = parser.parse_args()
 
 usernames = args.user
+favs = args.favs
+just_favs = args.just_favs
 
 def bail_out(_file, filename):
     _file.close()
@@ -80,8 +83,9 @@ def save_trax(client, username, trax_or_favs):
 
 for username in usernames:
     try:
-        save_trax(client, username, 'tracks')
-        if args.favs:
+        if not just_favs:
+            save_trax(client, username, 'tracks')
+        if favs or just_favs:
             save_trax(client, username, 'favorites')
     except:
         print "user not found :("
