@@ -22,7 +22,15 @@ Download this repo from github by clicking the download link, or:
 
 ## Running scdl:
 - If you're on a mac, enter the bash shell: `bash`
-- `cd /path/to/scdl`
-- `python sc.py user-name-here`
-- To download a user's favorites also, add the `-f` flag: `python sc.py user-name-here -f`
-- To get multiple users' trax, just add more arguments: `python sc.py user-name-one user-name-two`
+
+ `cd /path/to/scdl`
+
+ `python sc.py user-name-here`
+
+- To download a user's favorites also, add the `-f` flag: 
+
+`python sc.py user-name-here -f`
+
+- To get multiple users' trax, just add more arguments: 
+
+`python sc.py user-name-one user-name-two`
