@@ -3,6 +3,7 @@ Given a soundcloud user, download all their trax and, if you like, all their fav
 
 ## Installation
 Download this repo from github by clicking the download link, or:
+
 `git clone https://github.com/ddddddeon/scdl.git`
 
 ### Get a SoundCloud API key:
@@ -16,6 +17,7 @@ Download this repo from github by clicking the download link, or:
 
 #### If you have pip:
 `cd /path/to/scdl`
+
 `sudo pip install -r requirements.txt`
 
 ## Running scdl:
