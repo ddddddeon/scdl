@@ -29,8 +29,8 @@ Download this repo from github by clicking the download link, or:
 
 - To download a user's favorites also, add the `-f` flag: 
 
-`python sc.py user-name-here -f`
+ `python sc.py user-name-here -f`
 
 - To get multiple users' trax, just add more arguments: 
 
-`python sc.py user-name-one user-name-two`
+ `python sc.py user-name-one user-name-two`
