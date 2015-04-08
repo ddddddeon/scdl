@@ -37,7 +37,6 @@ def save_trax(client, username, trax_or_favs):
         uid = user[0].obj['id']
         if trax_or_favs in ['favorites', 'tracks']:
             tracks = client.get('/users/' + str(uid) + '/' + trax_or_favs)
-            print tracks.__dict__
         else:
             print "must be either favorites or tracks"
             exit(1)
