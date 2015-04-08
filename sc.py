@@ -37,6 +37,7 @@ def save_trax(client, username, trax_or_favs):
         uid = user[0].obj['id']
         if trax_or_favs in ['favorites', 'tracks']:
             tracks = client.get('/users/' + str(uid) + '/' + trax_or_favs)
+            print tracks.__dict__
         else:
             print "must be either favorites or tracks"
             exit(1)
@@ -60,16 +61,23 @@ def save_trax(client, username, trax_or_favs):
         sys.stdout.write("[SAVING] %s -> %s" % (t.obj['title'], filename))
         sys.stdout.flush()
 
-        try:
-            stream_url = t.obj['stream_url']
-        except KeyError:
-            bail_out(f, filename)
+        if t.obj['downloadable']:
+            try:
+                dl_url = t.obj['download_url']
+            except:
+                bail_out(f, filename)
+                continue
+        else:
+            try:
+                dl_url = t.obj['stream_url'] # lol
+            except KeyError:
+                bail_out(f, filename)
             continue
         
         # getting shady now...
         # GET the trak's stream url w/ our client_id >:D
         try:
-            stuff = requests.get(stream_url + '?client_id=' + CLIENT_ID, allow_redirects=True)
+            stuff = requests.get(dl_url + '?client_id=' + CLIENT_ID, allow_redirects=True)
         except:
             bail_out(f, filename)
             continue
