@@ -72,8 +72,8 @@ def save_trax(client, username, trax_or_favs):
                 dl_url = t.obj['stream_url'] # lol
             except KeyError:
                 bail_out(f, filename)
-            continue
-
+                continue
+            
 
         sys.stdout.write(saving + " %s -> %s" % (t.obj['title'], filename))
         sys.stdout.flush()
