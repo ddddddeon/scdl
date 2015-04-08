@@ -57,10 +57,18 @@ def save_trax(client, username, trax_or_favs):
 
         # make the file <username>/<trak>.mp3 
         f = open(filename, 'wb');
-        sys.stdout.write("[SAVING] %s -> %s" % (t.obj['title'], filename))
+        
+        print t.obj['downloadable']
+
+        if t.obj['downloadable'] == True:
+            saving = "[SAVING*]"
+        else: 
+            saving = "[SAVING]"
+
+        sys.stdout.write(saving + " %s -> %s" % (t.obj['title'], filename))
         sys.stdout.flush()
 
-        if t.obj['downloadable']:
+        if t.obj['downloadable'] == True:
             try:
                 dl_url = t.obj['download_url']
             except:
