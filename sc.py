@@ -9,8 +9,8 @@ import argparse
 # you will need to set an environment variable with
 # your soundcloud client_id from https://developers.soundcloud.com
 CLIENT_ID = os.getenv('SOUNDCLOUD_CLIENT_ID')
-client = soundcloud.Client(client_id=CLIENT_ID)
-
+CLIENT_SECRET = os.getenv('SOUNDCLOUD_CLIENT_SECRET')
+client = soundcloud.Client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 parser = argparse.ArgumentParser(description='scdl')
 parser.add_argument('-f', '--favs', action='store_true')
 parser.add_argument('-j', '--just-favs', action='store_true')
@@ -31,17 +31,17 @@ def bail_out(_file, filename):
 # call api again to get list of trax,
 # then GET all the trax & write blobs to disk
 def save_trax(client, username, trax_or_favs):
-    user = client.get('/users', q=username)
+#    user = client.get('/users', q=username)
+    user = requests.get('http://api.soundcloud.com/users/' + username + '?client_id=' + CLIENT_ID).json()
 
-    try:
-        uid = user[0].obj['id']
-        if trax_or_favs in ['favorites', 'tracks']:
-            tracks = client.get('/users/' + str(uid) + '/' + trax_or_favs)
-        else:
-            print "must be either favorites or tracks"
-            exit(1)
-    except:
-        raise
+    uid = user['id']
+    if trax_or_favs in ['favorites', 'tracks']:
+        tracks = client.get('/users/' + str(uid) + '/' + trax_or_favs)
+    else:
+        print "must be either favorites or tracks"
+        exit(1)
+#    except:
+#        raise
         
     if trax_or_favs == 'favorites':
         username += '/favs'
@@ -94,11 +94,12 @@ def save_trax(client, username, trax_or_favs):
         print u'  \u2713' # great job!
 
 for username in usernames:
-    try:
-        if not just_favs:
-            save_trax(client, username, 'tracks')
-        if favs or just_favs:
-            save_trax(client, username, 'favorites')
-    except:
-        print "user not found :("
-        continue
+#    try:
+    if not just_favs:
+        save_trax(client, username, 'tracks')
+    if favs or just_favs:
+        save_trax(client, username, 'favorites')
+#    except:
+#        raise
+#        print "user not found :("
+#        continue
